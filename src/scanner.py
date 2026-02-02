@@ -1,10 +1,13 @@
+import logging
 from datetime import datetime
+
 from patterns import apply_indicators, detect_pattern
 from config import DATA_FETCH_INTERVAL, DATA_FETCH_PERIOD
 from data.yfinance_provider import YFinanceProvider
 
 
 provider = YFinanceProvider()
+logger = logging.getLogger(__name__)
 
 
 def scan_stock(ticker: str):
@@ -15,14 +18,14 @@ def scan_stock(ticker: str):
     )
 
     if df.empty or len(df) < 50:
-        print(f"No data fetched for {ticker}")
+        logger.info("No data fetched for %s", ticker)
         return None
 
     df = apply_indicators(df)
     signals = detect_pattern(df)
 
     if not signals:
-        print(f"No signals generated for {ticker}")
+        logger.info("No signals generated for %s", ticker)
         return None
     
     return {

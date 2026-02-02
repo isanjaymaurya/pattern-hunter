@@ -1,22 +1,31 @@
+import logging
+
 from config import WATCHLIST
 from scanner import scan_stock
 
 
+logger = logging.getLogger(__name__)
+
+
 def main():
-    print("🔍 Starting Pattern Hunter...\n")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s - %(message)s",
+    )
+    logger.info("🔍 Starting Pattern Hunter...")
 
     for ticker in WATCHLIST:
         try:
             result = scan_stock(ticker)
             if result:
-                print("📊 SIGNAL FOUND")
-                print(f"Stock   : {result['ticker']}")
-                print(f"Price   : ₹{result['price']}")
-                print(f"Time    : {result['last_updated']}")
-                print(f"Signals : {', '.join(result['signals'])}")
-                print("-" * 35)
+                logger.info("📊 SIGNAL FOUND")
+                logger.info("Stock   : %s", result["ticker"])
+                logger.info("Price   : ₹%s", result["price"])
+                logger.info("Time    : %s", result["last_updated"])
+                logger.info("Signals : %s", ", ".join(result["signals"]))
+                logger.info("%s", "-" * 35)
         except Exception as e:
-            print(f"❌ Error processing {ticker}: {e}")
+            logger.exception("❌ Error processing %s", ticker)
 
 if __name__ == "__main__":
     main()

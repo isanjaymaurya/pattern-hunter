@@ -1,7 +1,12 @@
+import logging
+
 import pandas as pd
 import pandas_ta as ta
 
 from config import RSI_OVERBOUGHT, RSI_OVERSOLD
+
+
+logger = logging.getLogger(__name__)
 
 
 def _to_float(value):
@@ -35,7 +40,7 @@ def apply_indicators(df: pd.DataFrame) -> pd.DataFrame:
         df["ema50"] = ta.ema(df["Close"], length=50)
         df["vol_ma"] = ta.sma(df["Volume"], length=20)
     except Exception as e:
-        print(f"⚠️ Indicator calculation failed: {e}")
+        logger.exception("⚠️ Indicator calculation failed")
 
     return df
 
@@ -96,13 +101,17 @@ def detect_pattern(df: pd.DataFrame) -> list:
         ):
             signals.append("Volume Spike")
 
-        print(
-            f"RSI={rsi}, EMA20={ema20}, EMA50={ema50}, "
-            f"Volume={volume}, VolMA={vol_ma}"
+        logger.info(
+            "RSI=%s, EMA20=%s, EMA50=%s, Volume=%s, VolMA=%s",
+            rsi,
+            ema20,
+            ema50,
+            volume,
+            vol_ma,
         )
 
         return signals
     except Exception as e:
-        print(f"⚠️ Pattern detection failed: {e}")
+        logger.exception("⚠️ Pattern detection failed")
         
     return signals
