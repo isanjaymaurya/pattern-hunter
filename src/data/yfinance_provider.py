@@ -21,6 +21,10 @@ class YFinanceProvider(MarketDataProvider):
             progress=False # Displays a progress bar during ticker downloads when set to True; disables progress bar if logging is in DEBUG mode to avoid interference with log messages.
         )
 
+        # Fix yfinance multi-index columns
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.get_level_values(0)
+
         if df is None or df.empty:
             return pd.DataFrame()
         

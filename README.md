@@ -1,5 +1,9 @@
 # pattern-hunter
 
+# What is Candlestick Pattern
+
+https://groww.in/blog/candlestick-patterns
+
 
 # High Level Architecutre
 ```
