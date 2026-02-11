@@ -8,9 +8,9 @@ MARKET_CLOSE_TIME = time(15, 30)
 
 WATCHLIST = [
     "TCS.NS",
-    "RELIANCE.NS",
-    "HDFCBANK.NS",
-    "INFY.NS",
+    # "RELIANCE.NS",
+    # "HDFCBANK.NS",
+    # "INFY.NS",
     # "ICICIBANK.NS",
     # "KOTAKBANK.NS",
     # "SBIN.NS",
@@ -18,7 +18,10 @@ WATCHLIST = [
     # "BAJFINANCE.NS",
     # "AXISBANK.NS",
     # "ECLERX.NS",
-    "TIJARIA.NS"
+    # "TIJARIA.NS",
+    "BGRENERGY.NS",
+    "FEDERALBNK.NS",
+    "MOM50.NS",
 ]
 
 DATA_PROVIDER = "yfinance"  # Options: 'yfinance' etc.

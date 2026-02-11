@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime, time
+import pandas as pd
 import pytz
 
 from config import DATA_FETCH_INTERVAL, DATA_FETCH_PERIOD
@@ -24,6 +25,10 @@ def is_market_open():
 # ================= MAIN SCANNER =================
 def scan_stock(ticker: str):
     try:
+        # if not provider.is_market_open():
+        #     logger.info("Market closed. Skipping scan.")
+        # return None
+
         # Fetch data
         df = provider.fetch_ohlc(
             ticker=ticker,
@@ -31,7 +36,7 @@ def scan_stock(ticker: str):
             period=DATA_FETCH_PERIOD
         )
 
-        if df is None or df.empty or len(df) < 50:
+        if df is None or df.empty or len(df) < 20:
             logger.info("No data fetched for %s", ticker)
             return None
 
@@ -42,6 +47,15 @@ def scan_stock(ticker: str):
         if df.empty:
             logger.info("No intraday data for today: %s", ticker)
             return None
+        
+        df.index = pd.to_datetime(df.index)
+
+        # If index is timezone-aware (Yahoo usually UTC)
+        if df.index.tz is not None:
+            df.index = df.index.tz_convert("Asia/Kolkata")
+        else:
+            # If naive, assume UTC then convert
+            df.index = df.index.tz_localize("UTC").tz_convert("Asia/Kolkata")
 
         # Detect patterns
         signals = detect_pattern(df, ticker)
